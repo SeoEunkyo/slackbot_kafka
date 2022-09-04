@@ -34,7 +34,7 @@ func main() {
 
 	eventEmitter, err := kafka.NewKafkaEventEmitter(conn)
 	panicIfErr(err)
-
+	fmt.Println("restfullEndPoint :", config.RestfulEndpoint)
 	rest.ServeAPI(config.RestfulEndpoint, eventEmitter)
 
 }

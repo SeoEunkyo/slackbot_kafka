@@ -43,6 +43,7 @@ func ExtractConfiguration(filename string) (ServiceConfig, error) {
 
 	file, err := os.Open(filename)
 	if err != nil {
+		fmt.Errorf(err.Error())
 		fmt.Println("Configuration file not found. Continuing with default values.")
 		// return conf, err
 	}

@@ -54,7 +54,7 @@ func (k *kafkaEventEmitter) Emit(evt msgqueue.Event) error {
 	}
 
 	msg := &sarama.ProducerMessage{
-		Topic: "events",
+		Topic: "slack_bot",
 		Value: sarama.ByteEncoder(jsonBody),
 	}
 
