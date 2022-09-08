@@ -3,11 +3,10 @@ package rest
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/seoEunkyo/slackbot_kafka/src/contract"
-	"net/http"
-
-	"github.com/seoEunkyo/slackbot_kafka/src/lib/msgqueue"
+	"github.com/SeoEunkyo/slackbot_kafka/src/contracts"
+	"github.com/SeoEunkyo/slackbot_kafka/src/lib/msgqueue"
 	"github.com/slack-go/slack"
+	"net/http"
 )
 
 type interactionHandler struct {
@@ -35,7 +34,7 @@ func (h *interactionHandler) ListenMsg(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//msg를 확인하고 kafka에 메세지를 publish
-	msg := contract.CallbackEvent{
+	msg := contracts.CallbackEvent{
 		CallbackId: i.View.CallbackID,
 		Payload:    i,
 	}

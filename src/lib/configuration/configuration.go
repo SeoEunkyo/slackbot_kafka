@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/seoEunkyo/slackbot_kafka/src/lib/persistence/dblayer"
+	"github.com/SeoEunkyo/slackbot_kafka/src/lib/persistence/dblayer"
 )
 
 var (
@@ -40,7 +40,6 @@ func ExtractConfiguration(filename string) (ServiceConfig, error) {
 		KafkaMessageBrokersDefault,
 		SlackTokenDefault,
 	}
-
 	file, err := os.Open(filename)
 	if err != nil {
 		fmt.Errorf(err.Error())

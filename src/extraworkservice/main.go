@@ -3,11 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
-
-	"github.com/SeoEunkyo/slackbot_kafka/src/botlistener/rest"
+	"github.com/SeoEunkyo/slackbot_kafka/src/extraworkservice/listener"
 	"github.com/SeoEunkyo/slackbot_kafka/src/lib/configuration"
 	"github.com/SeoEunkyo/slackbot_kafka/src/lib/msgqueue/kafka"
+	"github.com/SeoEunkyo/slackbot_kafka/src/lib/persistence/dblayer"
+
 	"github.com/Shopify/sarama"
+	"os"
 )
 
 func panicIfErr(err error) {
@@ -15,12 +17,9 @@ func panicIfErr(err error) {
 		panic(err)
 	}
 }
-func main() {
-	// slack에서 interactivity payload를 받아서,
-	// kafka에 메시지를 발행
 
-	// kafka connection
-	// rest API for receive msg from slack
+func main() {
+
 	confPath := flag.String("conf", "./config.json", "flag to set the path to the configuration json file")
 	flag.Parse()
 	config, _ := configuration.ExtractConfiguration(*confPath)
@@ -28,13 +27,18 @@ func main() {
 
 	//create kafka emitter
 	conf := sarama.NewConfig()
-	conf.Producer.Return.Successes = true
 	conn, err := sarama.NewClient(config.KafkaMessageBrokers, conf)
 	panicIfErr(err)
-
-	eventEmitter, err := kafka.NewKafkaEventEmitter(conn)
+	//consumer 생성
+	eventListener, err := kafka.NewKafkaEventListener(conn, []int32{})
 	panicIfErr(err)
-	fmt.Println("restfullEndPoint :", config.RestfulEndpoint)
-	rest.ServeAPI(config.RestfulEndpoint, eventEmitter)
 
+	dbhandler, _ := dblayer.NewPersistenceLayer(dblayer.DBTYPE(os.Getenv("DATABASE_TYPE")), os.Getenv("DB_CONNECTION"))
+	processor := listener.EventProcessor{eventListener, dbhandler}
+
+	go processor.ProcessEvents()
+	fmt.Println("restfullEndPoint :", config.RestfulEndpoint)
+	//rest.ServeAPI(config.RestfulEndpoint)
+	var tmp string
+	fmt.Scanln(&tmp)
 }

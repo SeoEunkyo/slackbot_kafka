@@ -1,8 +1,8 @@
 package dblayer
 
 import (
-	"github.com/seoEunkyo/slackbot_kafka/src/lib/persistence"
-	mongolayer "github.com/seoEunkyo/slackbot_kafka/src/lib/persistence/mogolayer"
+	"github.com/SeoEunkyo/slackbot_kafka/src/lib/persistence"
+	mongolayer "github.com/SeoEunkyo/slackbot_kafka/src/lib/persistence/mogolayer"
 )
 
 type DBTYPE string

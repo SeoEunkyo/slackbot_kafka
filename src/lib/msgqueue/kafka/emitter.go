@@ -7,9 +7,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/SeoEunkyo/slackbot_kafka/src/lib/helper/kafka"
+	"github.com/SeoEunkyo/slackbot_kafka/src/lib/msgqueue"
 	"github.com/Shopify/sarama"
-	"github.com/seoEunkyo/slackbot_kafka/src/lib/helper/kafka"
-	"github.com/seoEunkyo/slackbot_kafka/src/lib/msgqueue"
 )
 
 type kafkaEventEmitter struct {
@@ -18,7 +18,7 @@ type kafkaEventEmitter struct {
 
 type messageEnvelope struct {
 	EventName string      `json:"eventName"`
-	Payload   interface{} `json:"payload"`
+	Context   interface{} `json:"context"`
 }
 
 func NewKafkaEventEmitterFromEnvironment(connectionStrings []string) (msgqueue.EventEmitter, error) {

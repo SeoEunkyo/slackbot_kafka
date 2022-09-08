@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/SeoEunkyo/slackbot_kafka/src/lib/msgqueue"
 	"github.com/gorilla/mux"
 	"github.com/slack-go/slack"
 )
@@ -39,13 +38,9 @@ func verifySigningSecret(r *http.Request) error {
 	return nil
 }
 
-func ServeAPI(listenAddr string, eventEmitter msgqueue.EventEmitter) {
+func ServeAPI(listenAddr string) {
 	r := mux.NewRouter()
-	interactionHandler := NewInteractionsHandler(eventEmitter)
-
-	r.Methods("get").Path(("/")).Handler(&IndexHandler{})
-	r.Methods("get").Path("/interactivity").HandlerFunc(interactionHandler.ListenMsg)
-	r.Methods("post").Path("/interactivity").HandlerFunc(interactionHandler.ListenMsg)
+	r.Methods("get").Path("/").Handler(&IndexHandler{})
 
 	srv := http.Server{
 		Handler:      r,

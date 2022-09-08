@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/seoEunkyo/slackbot_kafka/src/lib/persistence"
+	"github.com/SeoEunkyo/slackbot_kafka/src/lib/persistence"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
