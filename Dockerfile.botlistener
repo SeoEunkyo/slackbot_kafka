@@ -1,7 +1,7 @@
 ## build:
 ## docker build --force-rm -t bot-listener . -f ./Dockerfile.botlistener
 ## run:
-## docker run --rm -it --name bot-listener bot-listener
+## docker run --rm -it -p 8282:8282 --name bot-listener bot-listener
 
 FROM golang:latest as builder
 WORKDIR /go/github.com/SeoEunkyo/slackbot_kafka
@@ -15,4 +15,4 @@ COPY --from=builder /go/github.com/SeoEunkyo/slackbot_kafka/src/botlistener /go/
 WORKDIR go/botlistener
 ENV LISTEN_URL=0.0.0.0:8282
 EXPOSE 8282
-## CMD ["./botlistener"]
+CMD ["./botlistener"]
