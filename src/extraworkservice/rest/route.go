@@ -3,6 +3,7 @@ package rest
 import (
 	"bytes"
 	"fmt"
+	"github.com/SeoEunkyo/slackbot_kafka/src/lib/persistence"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -38,9 +39,13 @@ func verifySigningSecret(r *http.Request) error {
 	return nil
 }
 
-func ServeAPI(listenAddr string) {
+func ServeAPI(listenAddr string, slackToken string, databasehandler persistence.DatabaseHandler) {
+
+	slashHandler := NewSlashHandler(databasehandler, slackToken)
+
 	r := mux.NewRouter()
 	r.Methods("get").Path("/").Handler(&IndexHandler{})
+	r.Methods("get", "post").Path("/slash").HandlerFunc(slashHandler.ListenSlash)
 
 	srv := http.Server{
 		Handler:      r,

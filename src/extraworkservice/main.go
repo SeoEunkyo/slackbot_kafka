@@ -4,12 +4,12 @@ import (
 	"flag"
 	"fmt"
 	"github.com/SeoEunkyo/slackbot_kafka/src/extraworkservice/listener"
+	"github.com/SeoEunkyo/slackbot_kafka/src/extraworkservice/rest"
 	"github.com/SeoEunkyo/slackbot_kafka/src/lib/configuration"
 	"github.com/SeoEunkyo/slackbot_kafka/src/lib/msgqueue/kafka"
 	"github.com/SeoEunkyo/slackbot_kafka/src/lib/persistence/dblayer"
 
 	"github.com/Shopify/sarama"
-	"os"
 )
 
 func panicIfErr(err error) {
@@ -33,12 +33,11 @@ func main() {
 	eventListener, err := kafka.NewKafkaEventListener(conn, []int32{})
 	panicIfErr(err)
 
-	dbhandler, _ := dblayer.NewPersistenceLayer(dblayer.DBTYPE(os.Getenv("DATABASE_TYPE")), os.Getenv("DB_CONNECTION"))
-	processor := listener.EventProcessor{eventListener, dbhandler}
+	dbhandler, _ := dblayer.NewPersistenceLayer(dblayer.DBTYPE(config.Databasetype), config.DBConnection)
+	processor := listener.EventProcessor{eventListener, dbhandler, config.SlackToken}
 
 	go processor.ProcessEvents()
 	fmt.Println("restfullEndPoint :", config.RestfulEndpoint)
-	//rest.ServeAPI(config.RestfulEndpoint)
-	var tmp string
-	fmt.Scanln(&tmp)
+	rest.ServeAPI(config.RestfulEndpoint, config.SlackToken, dbhandler)
+
 }

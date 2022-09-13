@@ -39,7 +39,7 @@ func (e *StaticEventMapper) MapEvent(eventName string, serialized interface{}) (
 
 		err = dec.Decode(s)
 		if err != nil {
-			return nil, fmt.Errorf("could not unmarshal event %s: %s", eventName, err)
+			//return nil, fmt.Errorf("could not unmarshal event %s: %s", eventName, err)
 		}
 	}
 	return event, nil

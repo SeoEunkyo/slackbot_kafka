@@ -11,6 +11,7 @@ import (
 type EventProcessor struct {
 	EventListener msgqueue.EventListener
 	Database      persistence.DatabaseHandler
+	SlackToken    string
 }
 
 func (p *EventProcessor) ProcessEvents() {
@@ -38,12 +39,15 @@ func (p *EventProcessor) handleEvent(event msgqueue.Event) {
 	case *contracts.CallbackEvent:
 		log.Printf("event %s created: %s", e.EventName(), e)
 
-		//if !bson.IsObjectIdHex(e.ID) {
-		//	log.Printf("event %v did not contain valid object ID", e)
-		//	return
-		//}
+		switch e.CallbackId {
+		case "overtime_request":
+			p.OvertimeRequest(e.Payload)
+		case "overtime_report":
 
-		//p.Database.AddEvent(persistence.Event{ID: bson.ObjectIdHex(e.ID), Name: e.Name})
+		default:
+			// button actionHandler
+
+		}
 
 	default:
 		log.Printf("unknown event type: %T", e)
