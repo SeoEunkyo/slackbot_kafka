@@ -25,13 +25,10 @@ func GenerateOvertimeResponseMsg(applicant string, pickDate string, reason strin
 	approveBtnTxt := slack.NewTextBlockObject("plain_text", "Approve", false, false)
 	approveBtn := slack.NewButtonBlockElement("overtime_req_approval", oid, approveBtnTxt)
 	approveBtn.Style = slack.StylePrimary
-	approveBtn.Value = "overtime_req_approval"
 	denyBtnTxt := slack.NewTextBlockObject("plain_text", "Deny", false, false)
 	denyBtn := slack.NewButtonBlockElement("overtime_req_deny", oid, denyBtnTxt)
-	denyBtn.Value = "overtime_req_approval"
 	denyBtn.Style = slack.StyleDanger
-	actionBlock := slack.NewActionBlock("overtime_req_approval", approveBtn, denyBtn)
-	actionBlock.BlockID = "actionBlock"
+	actionBlock := slack.NewActionBlock("", approveBtn, denyBtn)
 	return slack.MsgOptionBlocks(headerSection,
 		fieldsSection,
 		actionBlock)

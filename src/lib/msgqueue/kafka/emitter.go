@@ -2,6 +2,7 @@ package kafka
 
 import (
 	"encoding/json"
+	"github.com/slack-go/slack"
 	"log"
 	"os"
 	"strings"
@@ -16,9 +17,18 @@ type kafkaEventEmitter struct {
 	producer sarama.SyncProducer
 }
 
+// 메세지가 커플링이 생겨버림
 type messageEnvelope struct {
 	EventName string      `json:"eventName"`
 	Context   interface{} `json:"context"`
+}
+type messageEnvelopeForSlack struct {
+	EventName string        `json:"eventName"`
+	Context   CallbackEvent `json:"context"`
+}
+type CallbackEvent struct {
+	CallbackId string                    `json:"CallbackId"`
+	Payload    slack.InteractionCallback `json:"Payload"`
 }
 
 func NewKafkaEventEmitterFromEnvironment(connectionStrings []string) (msgqueue.EventEmitter, error) {

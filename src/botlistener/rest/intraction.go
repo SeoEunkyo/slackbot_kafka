@@ -38,6 +38,7 @@ func (h *interactionHandler) ListenMsg(w http.ResponseWriter, r *http.Request) {
 		CallbackId: i.View.CallbackID,
 		Payload:    i,
 	}
+
 	h.eventEmitter.Emit(&msg)
 
 	return

@@ -27,6 +27,9 @@ func (e *StaticEventMapper) MapEvent(eventName string, serialized interface{}) (
 		if err != nil {
 			return nil, fmt.Errorf("could not unmarshal event %s: %s", eventName, err)
 		}
+
+	case map[string]interface{}:
+
 	default:
 		cfg := mapstructure.DecoderConfig{
 			Result:  event,

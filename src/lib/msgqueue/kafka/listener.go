@@ -90,7 +90,7 @@ func (k *kafkaEventListener) Listen(events ...string) (<-chan msgqueue.Event, <-
 			for msg := range pConsumer.Messages() {
 				log.Printf("received message %v", msg)
 
-				body := messageEnvelope{}
+				body := messageEnvelopeForSlack{}
 				err := json.Unmarshal(msg.Value, &body)
 				if err != nil {
 					errors <- fmt.Errorf("could not JSON-decode message: %v", err)

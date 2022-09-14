@@ -35,20 +35,11 @@ func (p *EventProcessor) ProcessEvents() {
 }
 
 func (p *EventProcessor) handleEvent(event msgqueue.Event) {
+
 	switch e := event.(type) {
 	case *contracts.CallbackEvent:
 		log.Printf("event %s created: %s", e.EventName(), e)
-
-		switch e.CallbackId {
-		case "overtime_request":
-			p.OvertimeRequest(e.Payload)
-		case "overtime_report":
-
-		default:
-			// button actionHandler
-
-		}
-
+		EventHandler(p, e.Payload)
 	default:
 		log.Printf("unknown event type: %T", e)
 	}
