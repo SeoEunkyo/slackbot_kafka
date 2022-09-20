@@ -1,0 +1,59 @@
+package rest
+
+import (
+	"bytes"
+	"fmt"
+	"github.com/SeoEunkyo/slackbot_kafka/src/lib/persistence"
+	"github.com/gorilla/mux"
+	"github.com/slack-go/slack"
+	"io/ioutil"
+	"net/http"
+	"time"
+)
+
+func verifySigningSecret(r *http.Request) error {
+	signingSecret := "5e0111b14c177021b4a91415d31fa02f"
+	verifier, err := slack.NewSecretsVerifier(r.Header, signingSecret)
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+	// Need to use r.Body again when unmarshalling SlashCommand and InteractionCallback
+	r.Body = ioutil.NopCloser(bytes.NewBuffer(body))
+
+	verifier.Write(body)
+	if err = verifier.Ensure(); err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+
+	return nil
+}
+
+func ServeAPI(listenAddr string, slackToken string, databasehandler persistence.DatabaseHandler) {
+
+	slashHandler := NewSlashHandler(databasehandler, slackToken)
+
+	r := mux.NewRouter()
+	r.Methods("get").Path("/").Handler(&IndexHandler{})
+	r.Methods("get", "post").Path("/slash").HandlerFunc(slashHandler.ListenSlash)
+
+	srv := http.Server{
+		Handler:      r,
+		Addr:         listenAddr,
+		WriteTimeout: 2 * time.Second,
+		ReadTimeout:  1 * time.Second,
+	}
+
+	err := srv.ListenAndServe()
+	if err != nil {
+		fmt.Println("err : ", err)
+	}
+
+}

@@ -18,7 +18,13 @@ import (
 const (
 	DB       = "BmeksSlack"
 	Overtime = "Overtime"
+	TimeBank = "TimeBank"
 )
+
+type ProjectionSumOfMin struct {
+	Id  string `bson:"_id" json:"id"`
+	Sum int    `bson:"sum" json:"sum"`
+}
 
 type MongoDBLayer struct {
 	client *mongo.Client
@@ -145,5 +151,54 @@ func (mgolayer *MongoDBLayer) GetOvertimeCompleteYet() []persistence.OvertimeReq
 	}
 
 	return returnValues
+}
 
+func (mgolayer *MongoDBLayer) GetSavedTotalMin(userName string) int {
+	coll := mgolayer.client.Database(DB).Collection(TimeBank)
+
+	//filter := bson.D{{"$match", bson.D{{"user_name", userName}}}}
+	groupStage := mongo.Pipeline{
+		{{"$group", bson.D{
+			{"_id", "$user_name"},
+			{"sum", bson.D{
+				{"$sum", "$amount"},
+			}},
+		}}},
+		//{{"$match", bson.D{{"user_name", userName}}}},
+	}
+	//opts := options.Find().SetProjection(projection)
+	//pipeLine := []bson.D{filter, groupStage}
+
+	cursor, err := coll.Aggregate(context.TODO(), groupStage)
+	var results []ProjectionSumOfMin
+
+	if err = cursor.All(context.TODO(), &results); err != nil {
+		panic(err)
+	}
+	totalMin := 0
+	for _, result := range results {
+		if result.Id == userName {
+			totalMin = result.Sum
+		}
+		fmt.Println(result)
+	}
+	return totalMin
+}
+
+func (mgolayer *MongoDBLayer) SavedTime(req *persistence.TimeBankRequest) (primitive.ObjectID, error) {
+
+	coll := mgolayer.client.Database(DB).Collection(TimeBank)
+	doc := bson.D{{"user_name", req.UserName}, {"start_time", req.StartTime},
+		{"end_time", req.EndTime}, {"break_time", req.BreakTime},
+		{"gap", req.Gap}, {"amount", req.Amount}}
+	result, err := coll.InsertOne(context.TODO(), doc)
+	if err != nil {
+		panic(err)
+	}
+	var returnOid primitive.ObjectID
+	if oid, ok := result.InsertedID.(primitive.ObjectID); ok {
+		returnOid = oid
+		return returnOid, nil
+	}
+	return returnOid, err
 }

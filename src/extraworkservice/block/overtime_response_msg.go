@@ -6,7 +6,6 @@ func GenerateOvertimeResponseMsg(applicant string, pickDate string, reason strin
 
 	headerText := slack.NewTextBlockObject("mrkdwn", "new request :\n*<https://www.notion.so/teamdaydreamlab/424b73582e0c4ecf9f042ce525c88213|"+applicant+" - 야근을 신청합니다.>*", false, false)
 	headerSection := slack.NewSectionBlock(headerText, nil, nil)
-	headerSection.BlockID = "test"
 
 	// Fields
 	typeField := slack.NewTextBlockObject("mrkdwn", "*Type:*\n야근 신청", false, false)
@@ -20,7 +19,6 @@ func GenerateOvertimeResponseMsg(applicant string, pickDate string, reason strin
 	// fieldSlice = append(fieldSlice, lastUpdateField)
 	fieldSlice = append(fieldSlice, reasonField)
 	fieldsSection := slack.NewSectionBlock(nil, fieldSlice, nil)
-	fieldsSection.BlockID = "test"
 	// Approve and Deny Buttons
 	approveBtnTxt := slack.NewTextBlockObject("plain_text", "Approve", false, false)
 	approveBtn := slack.NewButtonBlockElement("overtime_req_approval", oid, approveBtnTxt)
