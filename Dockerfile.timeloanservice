@@ -1,0 +1,18 @@
+## build:
+## docker build --force-rm -t timeloanservice . -f ./Dockerfile.timeloanservice
+## run:
+## docker run --rm -it -p 8484:8484 --name extraworkservice extraworkservice
+
+FROM golang:latest as builder
+WORKDIR /go/github.com/SeoEunkyo/slackbot_kafka
+Copy . .
+WORKDIR src/timeloanservice
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o timeloanservice
+
+
+FROM alpine
+COPY --from=builder /go/github.com/SeoEunkyo/slackbot_kafka/src/timeloanservice /go/timeloanservice
+WORKDIR go/timeloanservice
+ENV LISTEN_URL=0.0.0.0:8181
+EXPOSE 8181
+CMD ["./timeloanservice"]

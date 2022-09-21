@@ -1,0 +1,18 @@
+## build:
+## docker build --force-rm -t extraworkservice . -f ./Dockerfile.extraworkservice
+## run:
+## docker run --rm -it -p 8383:8383 --name extraworkservice extraworkservice
+
+FROM golang:latest as builder
+WORKDIR /go/github.com/SeoEunkyo/slackbot_kafka
+Copy . .
+WORKDIR src/extraworkservice
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o extraworkservice
+
+
+FROM alpine
+COPY --from=builder /go/github.com/SeoEunkyo/slackbot_kafka/src/extraworkservice /go/extraworkservice
+WORKDIR go/extraworkservice
+ENV LISTEN_URL=0.0.0.0:8181
+EXPOSE 8181
+CMD ["./extraworkservice"]

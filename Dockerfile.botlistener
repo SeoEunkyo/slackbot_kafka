@@ -13,6 +13,6 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o botlistener
 FROM alpine
 COPY --from=builder /go/github.com/SeoEunkyo/slackbot_kafka/src/botlistener /go/botlistener
 WORKDIR go/botlistener
-ENV LISTEN_URL=0.0.0.0:8282
-EXPOSE 8282
+ENV LISTEN_URL=0.0.0.0:8181
+EXPOSE 8181
 CMD ["./botlistener"]

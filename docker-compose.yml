@@ -1,0 +1,35 @@
+version: 1
+networks:
+  slackEvent:
+
+services:
+  bot-listener:
+    build:
+      context: .
+      dockerfile: Dockerfile.botlistener
+    ports:
+      - 8282:8181
+    networks:
+      - slackEvent
+
+  extra-work:
+    build:
+      context: .
+      dockerfile: Dockerfile.extraworkservice
+    ports:
+      - 8383:8181
+    depends_on:
+      - bot-listener
+    networks:
+      - slackEvent
+
+  time-loan:
+    build:
+      context: .
+      dockerfile: Dockerfile.timeloanservice
+    ports:
+      - 8484:8181
+    depends_on:
+      - bot-listener
+    networks:
+      - slackEvent
