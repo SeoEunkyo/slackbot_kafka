@@ -1,35 +1,53 @@
-version: 1
-networks:
-  slackEvent:
+version: "3"
 
 services:
+  reverse-proxy:
+    image: nginx
+    ports:
+      - "80:80"
+    restart: always
+    depends_on:
+      - bot-listener
+      - extra-work
+      - time-loan
+    networks:
+      - slackEvent
+    volumes:
+      - ./proxy/nginx.conf:/etc/nginx/nginx.conf
+
   bot-listener:
+    container_name: slackbot_kafka_bot_listener
     build:
       context: .
       dockerfile: Dockerfile.botlistener
-    ports:
-      - 8282:8181
+#    ports:
+#      - "8282:8181"
     networks:
       - slackEvent
 
   extra-work:
+    container_name: slackbot_kafka_extra_work
     build:
       context: .
       dockerfile: Dockerfile.extraworkservice
-    ports:
-      - 8383:8181
+#    ports:
+#      - "8383:8181"
     depends_on:
       - bot-listener
     networks:
       - slackEvent
 
   time-loan:
+    container_name: slackbot_kafka_time_loan
     build:
       context: .
       dockerfile: Dockerfile.timeloanservice
-    ports:
-      - 8484:8181
+#    ports:
+#      - "8484:8181"
     depends_on:
       - bot-listener
     networks:
       - slackEvent
+
+networks:
+  slackEvent:
