@@ -15,6 +15,17 @@ services:
     volumes:
       - ./proxy/nginx.conf:/etc/nginx/nginx.conf
 
+#  DB는 별도로 운영
+#  mongodb:
+#    image: mongo
+#    container_name: mongodb
+#    restart: always
+#    volumes:
+#      - ./mongodb:/data/db
+#    networks:
+#      - slackEvent
+
+
   bot-listener:
     container_name: slackbot_kafka_bot_listener
     build:
