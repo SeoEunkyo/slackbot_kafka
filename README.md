@@ -3,7 +3,11 @@
 > 하나의 봇에 여러개의 어플리케이션을 연결이 안되는것으로 확인이 됩니다(Interactivity가 하나). 그래서 중간에 kafka를 두고 이를 통해서 micro service를 만들어 보겠습니다. 
 
 
-![Interactivity가](https://velog.velcdn.com/images/divan/post/1b2149d1-32ea-4684-8b49-68a18f3accd8/image.png)
+
+
+
+![Interactivity가]
+(https://velog.velcdn.com/images/divan/post/1b2149d1-32ea-4684-8b49-68a18f3accd8/image.png)
 
 ---
 
@@ -110,5 +114,6 @@ networks:
 
 ---- 
 
-소스 주소
-https://github.com/SeoEunkyo/slackbot_kafka
+블로그 주소 
+https://velog.io/write?id=86d4dd88-3b0c-4e2d-86f9-b9827ff09e1b
+
