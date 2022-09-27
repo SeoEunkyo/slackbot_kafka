@@ -3,6 +3,12 @@
 > 하나의 봇에 여러개의 어플리케이션을 연결이 안되는것으로 확인이 됩니다(Interactivity가 하나). 그래서 중간에 kafka를 두고 이를 통해서 micro service를 만들어 보겠습니다. 
 
 
+실행법 
+1. 각서비스에 config.json파일을 알맞게 세팅해주세요
+2. docker-compose를 설치
+3. root directory에서 docker-compose up 명령어 실행
+
+
 ---
 
 ## 2.구상도
